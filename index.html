@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1> Learning Goal Editor</h1>
+    <button class="open"> Open </button>
+
+    <section id="adventure-view">
+        <label for="adventure-select"> Choose adventure:</label>
+        <select name="adventure" id="adventure-select">
+            <option value="">--Please choose an option--</option>
+        </select>
+        <label for="level-select"> Choose level:</label>
+        <select name="level" id="level-select">
+            <option value="">--Please choose an option--</option>
+        </select>
+    </section>
+
+    <button class="close"> Save </button>
+    <script>
+      let fileHandle;  
+      let adventureList;
+      let jsonContents;
+      const open = document.querySelector(".open");
+    //   open button
+      open.addEventListener("click", async () => {
+        // File opening starting here        
+        [fileHandle] = await window.showOpenFilePicker();
+        const file = await fileHandle.getFile();
+        const contents = await file.text();
+        jsonContents = await JSON.parse(contents);
+        // end file opening         
+
+        adventureList = Object.keys(jsonContents.adventures)
+
+        
+         const select = document.getElementById("adventure-select");
+         adventureList.forEach((adventure, index) => {
+            const newOption = document.createElement("option", {value: adventure});
+            const optionText = document.createTextNode(adventure);
+            newOption.appendChild(optionText);
+            select.append(newOption)
+        //     let normal = ``;
+        //     let reverse = ``; 
+        //     if (card.statusNormal) {
+        //         normal = `<input type="checkbox" id=${card.name} name=${card.name} checked>`;
+        //     } else {
+        //         normal = `<input type="checkbox" id=${card.name} name=${card.name} >`;
+        //     };
+
+        //     if (card.statusReversed) {
+        //         reverse = `<input type="checkbox" id=${card.name + "R"} name=${card.name + "R"} checked>`;
+        //     } else {
+        //         reverse = `<input type="checkbox" id=${card.name + "R"} name=${card.name + "R"}  >`;
+        //     };
+            
+
+        //     newCard.innerHTML = 
+        //     `<div class="pokemon">
+        //         <h3>${index + 1} ${card.name}</h3>
+        //         <label for=${card}>Normal</label>
+        //         ${normal}
+        //         <label for=${card + "R"}>Reverse</label>
+        //         ${reverse}     
+        //     </div>`;
+
+ 
+        //     list.append(newCard);
+         })
+      })
+
+      const resetLevelOptions = () => {
+        const selectElement = document.getElementById("level-select");
+        const defaultOption = document.createElement("option");
+        const optionText = document.createTextNode("--Please choose an option--");
+        defaultOption.appendChild(optionText);
+        selectElement.replaceChildren(defaultOption);
+      }
+
+      const selectElement = document.getElementById("adventure-select");
+      let levelOptions;
+      selectElement.addEventListener("change", (event) => {
+        const section = document.getElementById("adventure-view")
+        const error = document.createElement("p")    
+        section.append(error);
+        resetLevelOptions();
+        
+        if(!adventureList || !jsonContents){
+         error.textContent = "Please open a file and try again"
+        } else {
+            error.textContent = "";
+            const selectionKey = event.target.value; 
+            const selection = jsonContents.adventures[selectionKey];
+            console.log(selection.levels);
+            
+            levelOptions = selection.levels;
+            const levelSelect = document.getElementById("level-select");
+            Object.keys(levelOptions).forEach((level, index) => {
+            const newOption = document.createElement("option", {value: level});
+            const optionText = document.createTextNode(level);
+            newOption.appendChild(optionText);
+            levelSelect.append(newOption)
+            })
+
+           
+        }
+      })
+      const selectLevel = document.getElementById("level-select");
+      selectLevel.addEventListener("change", (event) => {
+        const section = document.getElementById("adventure-view")
+        const error = document.createElement("p")    
+        section.append(error);
+
+        if(!adventureList || !jsonContents || !levelOptions){
+         error.textContent = "Please open a file and try again"
+        } else {
+            const level = event.target.value;
+            const levelData = levelOptions[level];
+
+            const displayData = document.createElement("ul");
+
+            Object.keys(levelData).forEach(property => {
+                const displayProperty = document.createElement("li");
+                displayProperty.textContent = `${property}: ${levelData[property]}`
+                displayData.append(displayProperty);
+
+            })
+
+            section.append(displayData);
+        }
+            
+
+      })
+
+
+
+    //   close button
+    // const close = document.querySelector(".close");
+
+    // close.addEventListener("click", () => { 
+    //     const listOfInputs = document.getElementsByClassName("pokemon");
+
+    //     let checkedList = []; 
+    //     let ogListIndex = 0;
+    //     console.log (listOfInputs);
+
+    //     for(let card of listOfInputs) {
+            
+
+    //         const detailedCard = {
+    //             name: cardList[ogListIndex].name,
+    //             statusNormal: card.children[2].checked,
+    //             statusReversed: card.children[4].checked
+    //         }
+
+        
+
+    //         ogListIndex++; 
+    //         checkedList.push(detailedCard)
+    //     }
+
+    //     // console.log(JSON.stringify(checkedList));
+    //     saveFile(checkedList)
+
+    // })
+
+    // // Actual file saving happening here    
+
+
+
+    </script>
+</body>
+</html>
