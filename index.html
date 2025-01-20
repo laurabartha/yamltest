@@ -89,6 +89,7 @@
            
         }
       })
+
       const selectLevel = document.getElementById("level-select");
       selectLevel.addEventListener("change", (event) => {
         const section = document.getElementById("adventure-view")
@@ -113,6 +114,11 @@
             })
 
             section.append(displayData);
+            // add edit section, maybe edit button
+            // edit button event handler, adds a select drop down, populated with 
+            // learning goals, multiselect option should be available
+            // save button and event handler for save button, should update jsonContents
+            // and write to file as well
         }
             
 
