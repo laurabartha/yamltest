@@ -10,7 +10,7 @@
     <h1> Learning Goal Editor</h1>
     <button class="open"> Open </button>
 
-    <section id="adventure-view">
+    <section id="adventure-picker">
         <label for="adventure-select"> Choose adventure:</label>
         <select name="adventure" id="adventure-select">
             <option value="">--Please choose an option--</option>
@@ -19,6 +19,9 @@
         <select name="level" id="level-select">
             <option value="">--Please choose an option--</option>
         </select>
+    </section>
+    <section id="adventure-view">
+
     </section>
 
     <button class="close"> Save </button>
@@ -34,6 +37,7 @@
         const file = await fileHandle.getFile();
         const contents = await file.text();
         jsonContents = await JSON.parse(contents);
+    
         // end file opening         
 
         adventureList = Object.keys(jsonContents.adventures)
@@ -45,32 +49,7 @@
             const optionText = document.createTextNode(adventure);
             newOption.appendChild(optionText);
             select.append(newOption)
-        //     let normal = ``;
-        //     let reverse = ``; 
-        //     if (card.statusNormal) {
-        //         normal = `<input type="checkbox" id=${card.name} name=${card.name} checked>`;
-        //     } else {
-        //         normal = `<input type="checkbox" id=${card.name} name=${card.name} >`;
-        //     };
-
-        //     if (card.statusReversed) {
-        //         reverse = `<input type="checkbox" id=${card.name + "R"} name=${card.name + "R"} checked>`;
-        //     } else {
-        //         reverse = `<input type="checkbox" id=${card.name + "R"} name=${card.name + "R"}  >`;
-        //     };
-            
-
-        //     newCard.innerHTML = 
-        //     `<div class="pokemon">
-        //         <h3>${index + 1} ${card.name}</h3>
-        //         <label for=${card}>Normal</label>
-        //         ${normal}
-        //         <label for=${card + "R"}>Reverse</label>
-        //         ${reverse}     
-        //     </div>`;
-
- 
-        //     list.append(newCard);
+        
          })
       })
 
@@ -86,14 +65,14 @@
       let levelOptions;
       selectElement.addEventListener("change", (event) => {
         const section = document.getElementById("adventure-view")
+        section.replaceChildren();
         const error = document.createElement("p")    
-        section.append(error);
         resetLevelOptions();
         
         if(!adventureList || !jsonContents){
          error.textContent = "Please open a file and try again"
+         section.append(error);
         } else {
-            error.textContent = "";
             const selectionKey = event.target.value; 
             const selection = jsonContents.adventures[selectionKey];
             console.log(selection.levels);
@@ -113,11 +92,13 @@
       const selectLevel = document.getElementById("level-select");
       selectLevel.addEventListener("change", (event) => {
         const section = document.getElementById("adventure-view")
+        section.replaceChildren();
         const error = document.createElement("p")    
-        section.append(error);
+       
 
         if(!adventureList || !jsonContents || !levelOptions){
-         error.textContent = "Please open a file and try again"
+          error.textContent = "Please open a file and try again"
+          section.append(error);
         } else {
             const level = event.target.value;
             const levelData = levelOptions[level];
