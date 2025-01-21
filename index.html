@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="./style.css" rel="stylesheet" />
 </head>
 <body>
     <h1> Learning Goal Editor</h1>
@@ -21,6 +22,17 @@
         </select>
     </section>
     <section id="adventure-view">
+
+    </section>
+    <section id="editor" class="hidden">
+      <button class="edit" id="edit"> Edit </button>
+      <div class="learningGoals hidden">
+        <label for="goal-select"> Choose Learning Goals:</label>
+        <select name="goals" id="goal-select">
+          <option value="">--Please choose an option--</option>
+        </select>
+        <button class="save">Save</button>
+      </div>
 
     </section>
 
@@ -66,6 +78,10 @@
       selectElement.addEventListener("change", (event) => {
         const section = document.getElementById("adventure-view")
         section.replaceChildren();
+        // make sure learning goal editor is hidden
+        const editor = document.getElementById("editor");
+        editor.classList.add("hidden");
+
         const error = document.createElement("p")    
         resetLevelOptions();
         
@@ -94,6 +110,7 @@
       selectLevel.addEventListener("change", (event) => {
         const section = document.getElementById("adventure-view")
         section.replaceChildren();
+        
         const error = document.createElement("p")    
        
 
@@ -114,6 +131,14 @@
             })
 
             section.append(displayData);
+
+            const internals = document.querySelector(".learningGoals"); 
+            internals.classList.add("hidden");
+            const editor = document.getElementById("editor");
+            editor.classList.remove("hidden"); 
+      
+
+
             // add edit section, maybe edit button
             // edit button event handler, adds a select drop down, populated with 
             // learning goals, multiselect option should be available
@@ -123,6 +148,12 @@
             
 
       })
+
+      const edit = document.getElementById("edit");
+      edit.addEventListener("click", () => {
+        const internals = document.querySelector(".learningGoals"); 
+        internals.classList.remove("hidden");
+      });
 
 
 
