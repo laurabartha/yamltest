@@ -29,7 +29,7 @@
       <button class="edit" id="edit"> Edit </button>
       <div class="learningGoals hidden">
         <label for="goal-select"> Choose Learning Goals:</label>
-        <select name="goals" id="goal-select">
+        <select name="goals" id="goal-select" multiple>
           <option value="">--Please choose an option--</option>
         </select>
         <button class="save">Save</button>
@@ -37,7 +37,7 @@
 
     </section>
 
-    <button class="close"> Save </button>
+    <button class="close"> Save Changes To File</button>
     <script>
       let fileHandle;  
       let adventureList;
@@ -165,6 +165,15 @@
         const internals = document.querySelector(".learningGoals"); 
         internals.classList.remove("hidden");
       });
+
+      const save = document.querySelector(".save")
+      save.addEventListener("click", () => {
+        const goals = document.getElementById("goal-select");
+        const goalsToAdd = Array.from(goals.selectedOptions, (option) => option.value);
+
+        jsonContents.adventures[selectElement.value].levels[selectLevel.value].learningGoals = goalsToAdd;
+        console.log(jsonContents.adventures[selectElement.value].levels[selectLevel.value].learningGoals);
+      })
 
 
 
