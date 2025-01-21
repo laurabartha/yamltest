@@ -42,9 +42,18 @@
       let fileHandle;  
       let adventureList;
       let jsonContents;
-      console.log(allLearningGoals);
+      // populate learing goals
+      const goalSelect = document.getElementById("goal-select");
+      const learningGoalKeys = Object.keys(allLearningGoals);
+      learningGoalKeys.forEach(key => {
+        const newGoalOption = document.createElement("option", {value: key});
+        const goalOptionText = document.createTextNode(key);
+        newGoalOption.appendChild(goalOptionText);
+        goalSelect.append(newGoalOption);
+      });
+      //   open button
       const open = document.querySelector(".open");
-    //   open button
+    
       open.addEventListener("click", async () => {
         // File opening starting here        
         [fileHandle] = await window.showOpenFilePicker();
