@@ -37,7 +37,7 @@
 
     </section>
 
-    <button class="close"> Save Changes To File</button>
+    <button class="saveFile"> Save Changes To File</button>
     <script>
       let fileHandle;  
       let adventureList;
@@ -53,7 +53,7 @@
       });
       //   open button
       const open = document.querySelector(".open");
-    
+      // TODO: reset view on open to allow for opening another file
       open.addEventListener("click", async () => {
         // File opening starting here        
         [fileHandle] = await window.showOpenFilePicker();
@@ -102,7 +102,6 @@
         } else {
             const selectionKey = event.target.value; 
             const selection = jsonContents.adventures[selectionKey];
-            console.log(selection.levels);
             
             levelOptions = selection.levels;
             const levelSelect = document.getElementById("level-select");
@@ -148,13 +147,6 @@
             const editor = document.getElementById("editor");
             editor.classList.remove("hidden"); 
       
-
-
-            // add edit section, maybe edit button
-            // edit button event handler, adds a select drop down, populated with 
-            // learning goals, multiselect option should be available
-            // save button and event handler for save button, should update jsonContents
-            // and write to file as well
         }
             
 
@@ -170,44 +162,29 @@
       save.addEventListener("click", () => {
         const goals = document.getElementById("goal-select");
         const goalsToAdd = Array.from(goals.selectedOptions, (option) => option.value);
-
-        jsonContents.adventures[selectElement.value].levels[selectLevel.value].learningGoals = goalsToAdd;
-        console.log(jsonContents.adventures[selectElement.value].levels[selectLevel.value].learningGoals);
+      
+        jsonContents.adventures[selectElement.value].levels[selectLevel.value].learning_goals = goalsToAdd;
+        // TODO: remove this log and add some sort of visual save confirmation indicator
+        console.log(jsonContents.adventures[selectElement.value].levels[selectLevel.value].learning_goals);
       })
 
 
 
-    //   close button
-    // const close = document.querySelector(".close");
+      //savefile button
+      const saveFile = document.querySelector(".saveFile");
 
-    // close.addEventListener("click", () => { 
-    //     const listOfInputs = document.getElementsByClassName("pokemon");
+      saveFile.addEventListener("click", async () => { 
+        const newHandle = await window.showSaveFilePicker();
+        // create a FileSystemWritableFileStream to write to
+        const writableStream = await newHandle.createWritable();
+        // write our file
+        await writableStream.write(JSON.stringify(jsonContents, null, 2));
+        // close the file and write the contents to disk.
+        await writableStream.close();
+  
+      })
 
-    //     let checkedList = []; 
-    //     let ogListIndex = 0;
-    //     console.log (listOfInputs);
-
-    //     for(let card of listOfInputs) {
-            
-
-    //         const detailedCard = {
-    //             name: cardList[ogListIndex].name,
-    //             statusNormal: card.children[2].checked,
-    //             statusReversed: card.children[4].checked
-    //         }
-
-        
-
-    //         ogListIndex++; 
-    //         checkedList.push(detailedCard)
-    //     }
-
-    //     // console.log(JSON.stringify(checkedList));
-    //     saveFile(checkedList)
-
-    // })
-
-    // // Actual file saving happening here    
+   
 
 
 
