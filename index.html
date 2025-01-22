@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="./style.css" rel="stylesheet" />
+    <script src="goals.js"></script>
 </head>
 <body>
     <h1> Learning Goal Editor</h1>
@@ -23,14 +25,35 @@
     <section id="adventure-view">
 
     </section>
+    <section id="editor" class="hidden">
+      <button class="edit" id="edit"> Edit </button>
+      <div class="learningGoals hidden">
+        <label for="goal-select"> Choose Learning Goals:</label>
+        <select name="goals" id="goal-select" multiple>
+          <option value="">--Please choose an option--</option>
+        </select>
+        <button class="save">Save</button>
+      </div>
 
-    <button class="close"> Save </button>
+    </section>
+
+    <button class="saveFile"> Save Changes To File</button>
     <script>
       let fileHandle;  
       let adventureList;
       let jsonContents;
+      // populate learing goals
+      const goalSelect = document.getElementById("goal-select");
+      const learningGoalKeys = Object.keys(allLearningGoals);
+      learningGoalKeys.forEach(key => {
+        const newGoalOption = document.createElement("option", {value: key});
+        const goalOptionText = document.createTextNode(key);
+        newGoalOption.appendChild(goalOptionText);
+        goalSelect.append(newGoalOption);
+      });
+      //   open button
       const open = document.querySelector(".open");
-    //   open button
+      // TODO: reset view on open to allow for opening another file
       open.addEventListener("click", async () => {
         // File opening starting here        
         [fileHandle] = await window.showOpenFilePicker();
@@ -66,6 +89,10 @@
       selectElement.addEventListener("change", (event) => {
         const section = document.getElementById("adventure-view")
         section.replaceChildren();
+        // make sure learning goal editor is hidden
+        const editor = document.getElementById("editor");
+        editor.classList.add("hidden");
+
         const error = document.createElement("p")    
         resetLevelOptions();
         
@@ -75,7 +102,6 @@
         } else {
             const selectionKey = event.target.value; 
             const selection = jsonContents.adventures[selectionKey];
-            console.log(selection.levels);
             
             levelOptions = selection.levels;
             const levelSelect = document.getElementById("level-select");
@@ -89,10 +115,12 @@
            
         }
       })
+
       const selectLevel = document.getElementById("level-select");
       selectLevel.addEventListener("change", (event) => {
         const section = document.getElementById("adventure-view")
         section.replaceChildren();
+        
         const error = document.createElement("p")    
        
 
@@ -113,44 +141,50 @@
             })
 
             section.append(displayData);
+
+            const internals = document.querySelector(".learningGoals"); 
+            internals.classList.add("hidden");
+            const editor = document.getElementById("editor");
+            editor.classList.remove("hidden"); 
+      
         }
             
 
       })
 
+      const edit = document.getElementById("edit");
+      edit.addEventListener("click", () => {
+        const internals = document.querySelector(".learningGoals"); 
+        internals.classList.remove("hidden");
+      });
+
+      const save = document.querySelector(".save")
+      save.addEventListener("click", () => {
+        const goals = document.getElementById("goal-select");
+        const goalsToAdd = Array.from(goals.selectedOptions, (option) => option.value);
+      
+        jsonContents.adventures[selectElement.value].levels[selectLevel.value].learning_goals = goalsToAdd;
+        // TODO: remove this log and add some sort of visual save confirmation indicator
+        console.log(jsonContents.adventures[selectElement.value].levels[selectLevel.value].learning_goals);
+      })
 
 
-    //   close button
-    // const close = document.querySelector(".close");
 
-    // close.addEventListener("click", () => { 
-    //     const listOfInputs = document.getElementsByClassName("pokemon");
+      //savefile button
+      const saveFile = document.querySelector(".saveFile");
 
-    //     let checkedList = []; 
-    //     let ogListIndex = 0;
-    //     console.log (listOfInputs);
+      saveFile.addEventListener("click", async () => { 
+        const newHandle = await window.showSaveFilePicker();
+        // create a FileSystemWritableFileStream to write to
+        const writableStream = await newHandle.createWritable();
+        // write our file
+        await writableStream.write(JSON.stringify(jsonContents, null, 2));
+        // close the file and write the contents to disk.
+        await writableStream.close();
+  
+      })
 
-    //     for(let card of listOfInputs) {
-            
-
-    //         const detailedCard = {
-    //             name: cardList[ogListIndex].name,
-    //             statusNormal: card.children[2].checked,
-    //             statusReversed: card.children[4].checked
-    //         }
-
-        
-
-    //         ogListIndex++; 
-    //         checkedList.push(detailedCard)
-    //     }
-
-    //     // console.log(JSON.stringify(checkedList));
-    //     saveFile(checkedList)
-
-    // })
-
-    // // Actual file saving happening here    
+   
 
 
 
