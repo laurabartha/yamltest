@@ -34,7 +34,6 @@
 
     </section>
 
-    <button class="saveFile"> Save Changes To File</button>
     <script>
       let fileHandle;  
       let adventureList;
@@ -62,34 +61,20 @@
 
         adventureList = Object.keys(jsonContents.adventures)
 
-        
-        //  const select = document.getElementById("adventure-select");
-        //  adventureList.forEach((adventure, index) => {
-        //     const newOption = document.createElement("option", {value: adventure});
-        //     const optionText = document.createTextNode(adventure);
-        //     newOption.appendChild(optionText);
-        //     select.append(newOption)
-        
-        //  })
       })
 
-      const resetLevelOptions = () => {
-        // const selectElement = document.getElementById("level-select");
-        // const defaultOption = document.createElement("option");
-        // const optionText = document.createTextNode("--Please choose an option--");
-        // defaultOption.appendChild(optionText);
-        // selectElement.replaceChildren(defaultOption);
-      }
 
       const selectGoal = document.getElementById("goal-select");
-      // let levelOptions;
+
+      //TODO display more info about learning goal once selected
+
+      // TODO investigate multiselect
       selectGoal.addEventListener("change", (event) => {
         const section = document.getElementById("adventure-view")
         section.replaceChildren();
       
 
         const error = document.createElement("p")    
-        resetLevelOptions();
         
         if(!adventureList || !jsonContents){
          error.textContent = "Please open a file and try again"
@@ -98,122 +83,59 @@
             const selectedGoalKey = event.target.value; 
             adventureList.forEach((adventureKey)=>{
               let displayAdventure = false;
-              const currentAdventureLevels = Object.values(jsonContents.adventures[adventureKey].levels)
-              // funky option
-              // const groupedLevels = Object.groupBy(currentAdventureLevels, (level) => { 
-              //   if (!level.learning_goals) {
-              //       return "No"
-              //   };
-              //   return level.learning_goals.includes(selectGoal.value) ? "yes" : "no"
-              // })
-
-              // if (groupedLevels.yes){
-              //   console.log("Add stuff to html")
-              // }
+              const currentAdventureLevels = jsonContents.adventures[adventureKey].levels
 
               // normal option. 
               let hasGoal = false;
-              currentAdventureLevels.forEach((level) => {
-                if (level.learning_goals && level.learning_goals.includes(selectGoal.value)) {
+              let levelsWithGoal = [];
+              for (level in currentAdventureLevels) {
+                const levelData = currentAdventureLevels[level];
+                if (levelData.learning_goals && levelData.learning_goals.includes(selectGoal.value)) {
                   hasGoal = true;
-                  console.log(level);
+                  levelsWithGoal.push(level);
+                
                 }
-              })
+              }
 
               if (hasGoal) {
                 console.log("Add stuff to html");
+                const adventure = document.createElement("details");
+                adventure.setAttribute("id",adventureKey)
+                const adventureText = document.createElement("summary");
+                adventureText.textContent = adventureKey;
+                adventure.append(adventureText);
+                const levelsList = document.createElement("ul");
+
+                levelsWithGoal.forEach((level) => {
+                  console.log(level, currentAdventureLevels[level])
+                  const levelElement = document.createElement("li");
+                  levelElement.innerHTML = 
+                  `<details>
+                    <summary> ${level} </summary>
+                    <ul>
+                      <li> first story text : ${currentAdventureLevels[level].story_text}</li>
+                      <li> first example code : ${currentAdventureLevels[level].example_code}</li>
+                    </ul>  
+                    </details>
+                  `
+                  levelsList.append(levelElement);
+
+                })
+
+                // TODO make above li elements less hard coded. Probably send it off to a function 
+                // to make the innerHTML
+                adventure.append(levelsList);
+
+                section.append(adventure);
               }
             });
 
            
-
-              // 
-
-            
-            
-            // levelOptions = selection.levels;
-            // const levelSelect = document.getElementById("level-select");
-            // Object.keys(levelOptions).forEach((level, index) => {
-            // const newOption = document.createElement("option", {value: level});
-            // const optionText = document.createTextNode(level);
-            // newOption.appendChild(optionText);
-            // levelSelect.append(newOption)
-            // })
-
            
         }
       })
 
-      // const selectLevel = document.getElementById("level-select");
-      // selectLevel.addEventListener("change", (event) => {
-      //   const section = document.getElementById("adventure-view")
-      //   section.replaceChildren();
-        
-      //   const error = document.createElement("p")    
-       
-
-      //   if(!adventureList || !jsonContents || !levelOptions){
-      //     error.textContent = "Please open a file and try again"
-      //     section.append(error);
-      //   } else {
-      //       const level = event.target.value;
-      //       const levelData = levelOptions[level];
-
-      //       const displayData = document.createElement("ul");
-
-      //       Object.keys(levelData).forEach(property => {
-      //           const displayProperty = document.createElement("li");
-      //           displayProperty.textContent = `${property}: ${levelData[property]}`
-      //           displayData.append(displayProperty);
-
-      //       })
-
-      //       section.append(displayData);
-
-      //       const internals = document.querySelector(".learningGoals"); 
-      //       internals.classList.add("hidden");
-      //       const editor = document.getElementById("editor");
-      //       editor.classList.remove("hidden"); 
-      
-      //   }
-            
-
-      // })
-
-      // const edit = document.getElementById("edit");
-      // edit.addEventListener("click", () => {
-      //   const internals = document.querySelector(".learningGoals"); 
-      //   internals.classList.remove("hidden");
-      // });
-
-      // const save = document.querySelector(".save")
-      // save.addEventListener("click", () => {
-      //   const goals = document.getElementById("goal-select");
-      //   const goalsToAdd = Array.from(goals.selectedOptions, (option) => option.value);
-      
-      //   jsonContents.adventures[selectElement.value].levels[selectLevel.value].learning_goals = goalsToAdd;
-      //   // TODO: remove this log and add some sort of visual save confirmation indicator
-      //   console.log(jsonContents.adventures[selectElement.value].levels[selectLevel.value].learning_goals);
-      // })
-
-
-
-      // //savefile button
-      // const saveFile = document.querySelector(".saveFile");
-
-      // saveFile.addEventListener("click", async () => { 
-      //   const newHandle = await window.showSaveFilePicker();
-      //   // create a FileSystemWritableFileStream to write to
-      //   const writableStream = await newHandle.createWritable();
-      //   // write our file
-      //   await writableStream.write(JSON.stringify(jsonContents, null, 2));
-      //   // close the file and write the contents to disk.
-      //   await writableStream.close();
-  
-      // })
-
-   
-
+     
 
 
     </script>
