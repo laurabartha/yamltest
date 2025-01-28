@@ -18,19 +18,11 @@
             <option value="">--Please choose an option--</option>
         </select>
     </section>
-
-    <section id="adventure-view">
+    <section id="goal-details" >
 
     </section>
-    <section id="editor" class="hidden">
-      <button class="edit" id="edit"> Edit </button>
-      <div class="learningGoals hidden">
-        <label for="goal-select"> Choose Learning Goals:</label>
-        <select name="goals" id="goal-select" multiple>
-          <option value="">--Please choose an option--</option>
-        </select>
-        <button class="save">Save</button>
-      </div>
+
+    <section id="adventure-view">
 
     </section>
 
@@ -66,12 +58,15 @@
 
       const selectGoal = document.getElementById("goal-select");
 
-      //TODO display more info about learning goal once selected
+      const selectedGoalDetails = document.getElementById("goal-details");
+
+  
 
       // TODO investigate multiselect
       selectGoal.addEventListener("change", (event) => {
         const section = document.getElementById("adventure-view")
         section.replaceChildren();
+        selectedGoalDetails.replaceChildren();
       
 
         const error = document.createElement("p")    
@@ -81,6 +76,7 @@
          section.append(error);
         } else {
             const selectedGoalKey = event.target.value; 
+            addGoalDetails(selectedGoalKey);
             adventureList.forEach((adventureKey)=>{
               let displayAdventure = false;
               const currentAdventureLevels = jsonContents.adventures[adventureKey].levels
@@ -98,7 +94,6 @@
               }
 
               if (hasGoal) {
-                console.log("Add stuff to html");
                 const adventure = document.createElement("details");
                 adventure.setAttribute("id",adventureKey)
                 const adventureText = document.createElement("summary");
@@ -107,7 +102,6 @@
                 const levelsList = document.createElement("ul");
 
                 levelsWithGoal.forEach((level) => {
-                  console.log(level, currentAdventureLevels[level])
                   const levelElement = document.createElement("li");
                   levelElement.innerHTML = 
                   `<details>
@@ -135,6 +129,18 @@
         }
       })
 
+      const addGoalDetails = (goalKey) => {
+        const selectedGoal = allLearningGoals[goalKey];
+
+        const goalDetails = document.createElement("ul");
+        goalDetails.innerHTML = 
+          `
+          <li> Description: ${selectedGoal.description}</li>
+          <li> Level : ${selectedGoal.level}</li>
+          `
+          selectedGoalDetails.append(goalDetails);
+
+      }
      
 
 
