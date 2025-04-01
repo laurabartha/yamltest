@@ -4,14 +4,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Learning Goal Viewer</title> 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="./style.css" rel="stylesheet" />
     <script src="goals.js"></script>
     <script src="content.js"></script>
 </head>
 <body>
-    <h1> Learning Goal Viewer</h1>
-    <button class="open"> Open </button>
+    <h1> Hedy Learning Goal Viewer</h1>
+    <section  id="content-override">
+      <p>Use your own tagged file (OPTIONAL): </p>
+      <button class="open"> Open </button> 
+    </section>
 
     <section id="goal-picker">
         <label for="goal-select"> Choose goal:</label>
@@ -105,7 +111,7 @@
                 levelsWithGoal.forEach((level) => {
                   const levelElement = document.createElement("li");
                   levelElement.innerHTML = 
-                  `<details>
+                  `<details class="level">
                     <summary> ${level} </summary>
                     <ul>
                       <li> first story text : ${currentAdventureLevels[level].story_text}</li>

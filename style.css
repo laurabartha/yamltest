@@ -1,3 +1,53 @@
+/* color : rgb(190 227 248)  */
+* { 
+    margin: 0, auto;
+    text-align: center;
+    font-family: "Roboto", sans-serif;
+}
+
+h1 {
+    font-family: "Balsamiq Sans", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+ul {
+    list-style-type: none;
+    padding: 10px
+} 
+
+details {
+    padding: 10px;
+    margin: 10px;
+    border: solid 2px rgb(190 227 248);
+    border-radius: 20px;
+    min-width: 30%;
+}
+section {
+    padding: 10px;
+}
+
+
 .hidden {
     display: none;
+}
+
+.level {
+    border-color: rgb(151 38 109);
+}
+
+#content-override {
+    background-color: rgb(190 227 248);
+}
+
+#goal-picker {
+    background-color: rgb(243, 230, 184);
+}
+
+#adventure-view {
+    display: flex;
+    justify-content: space-around;
+ 
+    min-height: 50%;
+    flex-wrap: wrap;
 }
