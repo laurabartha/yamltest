@@ -7,6 +7,7 @@
     <title>Document</title>
     <link href="./style.css" rel="stylesheet" />
     <script src="goals.js"></script>
+    <script src="content.js"></script>
 </head>
 <body>
     <h1> Learning Goal Viewer</h1>
@@ -28,8 +29,8 @@
 
     <script>
       let fileHandle;  
-      let adventureList;
-      let jsonContents;
+      let jsonContents = contentv1;
+      let adventureList = Object.keys(jsonContents.adventures)
       // populate learing goals
       const goalSelect = document.getElementById("goal-select");
       const learningGoalKeys = Object.keys(allLearningGoals);
@@ -130,16 +131,17 @@
       })
 
       const addGoalDetails = (goalKey) => {
-        const selectedGoal = allLearningGoals[goalKey];
+        if (goalKey) {
+          const selectedGoal = allLearningGoals[goalKey];
 
-        const goalDetails = document.createElement("ul");
-        goalDetails.innerHTML = 
-          `
-          <li> Description: ${selectedGoal.description}</li>
-          <li> Level : ${selectedGoal.level}</li>
-          `
-          selectedGoalDetails.append(goalDetails);
-
+          const goalDetails = document.createElement("ul");
+          goalDetails.innerHTML = 
+            `
+            <li> Description: ${selectedGoal.description}</li>
+            <li> Level : ${selectedGoal.level}</li>
+            `
+            selectedGoalDetails.append(goalDetails);
+        }
       }
      
 
